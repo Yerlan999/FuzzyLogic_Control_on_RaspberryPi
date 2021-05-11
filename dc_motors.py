@@ -24,17 +24,21 @@ def move_motor(motor, speed, reverse=False):
         if reverse:
             GPIO.output(IN1, GPIO.LOW)
             GPIO.output(IN2, GPIO.HIGH)
-        GPIO.output(IN1, GPIO.HIGH)
-        GPIO.output(IN2, GPIO.LOW)
-        ena_pwm.ChangeDutyCycle(speed)
+            ena_pwm.ChangeDutyCycle(speed)
+        else:
+            GPIO.output(IN1, GPIO.HIGH)
+            GPIO.output(IN2, GPIO.LOW)
+            ena_pwm.ChangeDutyCycle(speed)
 
     if motor == 2:
         if reverse:
             GPIO.output(IN3, GPIO.LOW)
             GPIO.output(IN4, GPIO.HIGH)
-        GPIO.output(IN3, GPIO.HIGH)
-        GPIO.output(IN4, GPIO.LOW)
-        enb_pwm.ChangeDutyCycle(speed)
+            enb_pwm.ChangeDutyCycle(speed)
+        else:
+            GPIO.output(IN3, GPIO.HIGH)
+            GPIO.output(IN4, GPIO.LOW)
+            enb_pwm.ChangeDutyCycle(speed)
 
 
 def move_motors(speed, reverse=False):
@@ -46,10 +50,10 @@ def move_motors(speed, reverse=False):
         GPIO.output(IN4, GPIO.HIGH)
         ena_pwm.ChangeDutyCycle(speed)
         enb_pwm.ChangeDutyCycle(speed)
-
-    GPIO.output(IN1, GPIO.HIGH)
-    GPIO.output(IN2, GPIO.LOW)
-    GPIO.output(IN3, GPIO.HIGH)
-    GPIO.output(IN4, GPIO.LOW)
-    ena_pwm.ChangeDutyCycle(speed)
-    enb_pwm.ChangeDutyCycle(speed)
+    else:
+        GPIO.output(IN1, GPIO.HIGH)
+        GPIO.output(IN2, GPIO.LOW)
+        GPIO.output(IN3, GPIO.HIGH)
+        GPIO.output(IN4, GPIO.LOW)
+        ena_pwm.ChangeDutyCycle(speed)
+        enb_pwm.ChangeDutyCycle(speed)

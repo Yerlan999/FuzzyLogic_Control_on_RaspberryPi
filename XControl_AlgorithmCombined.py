@@ -1,11 +1,11 @@
 import RPi.GPIO as GPIO
 import dc_motors
 import ultra_sonic
-import DiskControl
+import XMotionControl
 from dc_motors import move_motor
 from ultra_sonic import get_distance
 from normalizing_funcs import custom_normalize
-from DiskControl import get_fuzzy_value
+from XMotionControl import get_fuzzy_value
 
 
 # Setting up PIN modes
@@ -30,16 +30,19 @@ if __name__ == '__main__':
             distance = get_distance()
 
             # Normalize it to feed into Fuzzy Logic System
-            norm_dist = custom_normalize(distance, [0, 400], [0, 1])
+            norm_dist = custom_normalize(distance, [0, 400], [-1, 1])
 
             # Feed into FLS
             fuzz_val_mot = get_fuzzy_value(norm_dist)
 
             # Normalize output values to match up with PWM range
-            norm_speed_mot = custom_normalize(fuzz_val_mot, [0, 1], [0, 100])
+            norm_speed_mot = custom_normalize(fuzz_val_mot, [-1, 1], [0, 100])
 
             # Move motors according to Fuzzy Logic
-            move_motor(1, norm_speed_mot)
+            if fuzz_val_mot < 0:
+                move_motor(1, norm_speed_mot, reverse=True)
+            else:
+                move_motor(1, norm_speed_mot)
 
             time.sleep(0.01)
 
