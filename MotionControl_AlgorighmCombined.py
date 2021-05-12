@@ -1,11 +1,8 @@
 import RPi.GPIO as GPIO
-import dc_motors
-import ultra_sonic
-import MotionControl
-from dc_motors import move_motor
-from ultra_sonic import get_distance
-from normalizing_funcs import custom_normalize
-from MotionControl import get_fuzzy_value
+from dc_motors import *
+from ultra_sonic import *
+from MotionControl import *
+from normalizing_funcs import *
 
 
 # Setting up PIN modes
