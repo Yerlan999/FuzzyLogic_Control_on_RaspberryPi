@@ -1,33 +1,26 @@
+import time
 import RPi.GPIO as GPIO
-from dc_motors import *
-from ultra_sonic import *
+from utilities import *
 from DiskControl import *
-from normalizing_funcs import *
 
 
-# Setting up PIN modes
-GPIO.setmode(GPIO.BOARD)  # by physical PIN layout
-GPIO.setwarnings(False)  # disable warnings
-
-GPIO.setup(TRIGGER, GPIO.OUT)
-GPIO.setup(ECHO, GPIO.IN)
-
-GPIO.setup(ENA, GPIO.OUT)
-GPIO.setup(ENB, GPIO.OUT)
-GPIO.setup(IN1, GPIO.OUT)
-GPIO.setup(IN2, GPIO.OUT)
-GPIO.setup(IN3, GPIO.OUT)
-GPIO.setup(IN4, GPIO.OUT)
-
+old_distance = 0
 
 if __name__ == '__main__':
     try:
         while True:
-            # Get distance value from Ultra Sonic Sensor
-            distance = get_distance()
 
+            # Get distance value from Ultra Sonic Sensor
+            new_distance = get_distance()
+            if new_distance > 400:
+                new_distance = old_distance
+            new_distance = (new_distance + old_distance)/2
+            weighted_distance = round((new_distance*0.1 + old_distance*0.9), 2)
+            old_distance = weighted_distance
+
+            time.sleep(0.5)
             # Normalize it to feed into Fuzzy Logic System
-            norm_dist = custom_normalize(distance, [0, 400], [0, 1])
+            norm_dist = custom_normalize(weighted_distance, [0, 400], [0, 1])
 
             # Feed into FLS
             fuzz_val_mot = get_fuzzy_value(norm_dist)

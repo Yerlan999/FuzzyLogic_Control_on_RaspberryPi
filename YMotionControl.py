@@ -48,4 +48,4 @@ def get_fuzzy_value(distance):
     y_motion.input['distance_y'] = distance
     y_motion.compute()
 
-    return y_motion.output['motor_y']
+    return float(y_motion.output['motor_y'])

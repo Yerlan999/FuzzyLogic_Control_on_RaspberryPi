@@ -40,4 +40,4 @@ def get_fuzzy_value(distance):
     disk.input['z_current'] = distance
     disk.compute()
 
-    return disk.output['disk_voltage']
+    return float(disk.output['disk_voltage'])

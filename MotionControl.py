@@ -52,6 +52,6 @@ def get_fuzzy_value(distance, motor):
     motion.compute()
 
     if motor == 1:
-        return motion.output['motor_1']
+        return float(motion.output['motor_1'])
     if motor == 2:
-        return motion.output['motor_2']
+        return float(motion.output['motor_2'])

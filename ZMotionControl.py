@@ -75,4 +75,4 @@ def get_fuzzy_value(current_x, current_y, current_z):
     # Crunch the numbers
     z_motion.compute()
 
-    return z_motion.output['motor_z']
+    return float(z_motion.output['motor_z'])
