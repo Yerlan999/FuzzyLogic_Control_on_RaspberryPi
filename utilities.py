@@ -39,6 +39,7 @@ ena_pwm.start(0)  # start PWM of required Duty Cycle
 enb_pwm.start(0)
 
 
+
 def custom_normalize(to_convert, input_range, output_range):
     """
         Parameters:
@@ -48,27 +49,39 @@ def custom_normalize(to_convert, input_range, output_range):
     """
     assert len(input_range) == 2, "Input range should be list of 2 items"
     assert len(output_range) == 2, "Output range should be list of 2 items"
-    assert type(to_convert) == int or type(to_convert) == float, "Only integer and float is allowed to convert"
-
-    bipolar_ouput_range = False
+    assert type(to_convert) in [int, float], "Only integer and float is allowed to convert"
+    assert output_range[0] < output_range[1], "First range number must be less than second number"
+    assert input_range[0] < input_range[1], "First range number must be less than second number"
 
     for i in input_range + output_range:
         assert type(i) == int or type(i) == float, "Only integers and floats are allowed in range values"
-        if i < 0:
-            bipolar_ouput_range = True
 
-    if bipolar_ouput_range:
-        coefficient = abs((input_range[0] - input_range[1])/(output_range[0] - output_range[1]))
+    inp_str, inp_end, out_str, out_end = input_range + output_range
 
-        if to_convert < 0:
-            return max(round(to_convert/coefficient-output_range[1], 2), output_range[0])
-        return min(round(to_convert/coefficient-output_range[1], 2), output_range[1])
-    else:
-        coefficient = abs((input_range[0] - input_range[1])/(output_range[0] - output_range[1]))
+    if to_convert > input_range[1]:
+        to_convert = input_range[1]
+    if to_convert < input_range[0]:
+        to_convert = input_range[0]
 
-        if to_convert < 0:
-            return max(round(to_convert/coefficient, 2), output_range[0])
-        return min(round(to_convert/coefficient, 2), output_range[1])
+    inp_diff = abs(inp_str-inp_end)
+    out_diff = abs(out_str-out_end)
+    coefficient = inp_diff / out_diff
+    print("Coefficient: ", coefficient)
+
+
+    if inp_str == 0 and out_str == 0:
+        return to_convert / coefficient
+    if inp_str < 0 and out_str < 0:
+        return to_convert / coefficient
+
+
+    if out_str < 0:
+        return to_convert / coefficient - out_end
+    if inp_str < 0:
+        return to_convert / coefficient + (out_diff/inp_diff)
+    if out_str > 0:
+        return to_convert / coefficient + out_str
+
 
 
 
